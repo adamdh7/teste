@@ -1,446 +1,973 @@
 <!DOCTYPE html>
 <html lang="ht">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Adam_D'H7 - Digital HUB 7</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-      color: #e0e0e0;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    #header {
-      background: rgba(0, 0, 0, 0.6);
-      padding: 15px;
-      text-align: center;
-      border-bottom: 1px solid #444;
-    }
-    #header h1 {
-      margin: 0;
-      font-size: 2.5em;
-      color: #00ffcc;
-      text-shadow: 0 0 10px #00ffcc;
-    }
-    #header h2 {
-      margin: 5px 0;
-      font-size: 1.4em;
-      color: #a0a0ff;
-    }
-    #header h3 {
-      margin: 10px 0;
-      font-size: 1.8em;
-      color: #ffffff;
-    }
-    #tfid-container {
-      margin: 10px 0;
-    }
-    #tfid {
-      padding: 8px;
-      width: 200px;
-      border-radius: 8px;
-      border: none;
-      background: #333;
-      color: #fff;
-    }
-    #lang-buttons {
-      margin: 15px 0;
-    }
-    .lang-btn {
-      background: #333;
-      color: #fff;
-      border: none;
-      padding: 8px 16px;
-      margin: 0 5px;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    .lang-btn.active {
-      background: #00ffcc;
-      color: #000;
-    }
-    .lang-btn:hover {
-      background: #555;
-    }
-    #close-btn {
-      background: #ff0066;
-      color: #fff;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 20px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    #chat-container {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-    .message {
-      max-width: 80%;
-      padding: 12px 18px;
-      border-radius: 18px;
-      line-height: 1.5;
-      word-wrap: break-word;
-    }
-    .user {
-      align-self: flex-end;
-      background: #00ffcc;
-      color: #000;
-      border-bottom-right-radius: 5px;
-    }
-    .bot {
-      align-self: flex-start;
-      background: #333;
-      color: #e0e0e0;
-      border-bottom-left-radius: 5px;
-    }
-    .message img {
-      max-width: 100%;
-      border-radius: 12px;
-      margin-top: 8px;
-    }
-    .message audio {
-      width: 100%;
-      margin-top: 8px;
-    }
-    #input-area {
-      display: flex;
-      flex-direction: column;
-      padding: 15px;
-      background: rgba(0, 0, 0, 0.7);
-      gap: 10px;
-    }
-    #message-input {
-      flex: 1;
-      padding: 12px;
-      border-radius: 25px;
-      border: none;
-      background: #333;
-      color: #fff;
-      resize: none;
-      height: 60px;
-    }
-    #controls {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-    #send-btn, #record-btn {
-      padding: 12px 24px;
-      border: none;
-      border-radius: 25px;
-      background: #00ffcc;
-      color: #000;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    #record-btn.recording {
-      background: #ff0066;
-      animation: pulse 1.5s infinite;
-    }
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(255,0,102,0.7); }
-      70% { box-shadow: 0 0 0 10px rgba(255,0,102,0); }
-      100% { box-shadow: 0 0 0 0 rgba(255,0,102,0); }
-    }
-    #attach-image {
-      background: #444;
-      color: #fff;
-      padding: 12px;
-      border-radius: 25px;
-      cursor: pointer;
-    }
-    input[type="file"] {
-      display: none;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+    <title>Adam_D'H7</title>
+    <link rel="manifest" href="/manifest.json?v=17">
+    <link rel="canonical" href="https://ai.adamdh7.org/">
+    <meta name="theme-color" content="#000000">
+    <meta name="google-site-verification" content="UItG8vIV9YM3napElbB9ZAf7QYCniXwYvImdM78xTKY" />
+    <meta name="description" content="Adam_D’H7, asistan entèlijan ki pale Kreyòl, Français, English ak Español. Chat, imaj, kod, tout bagay nan yon sèl kote.">
+    <meta name="robots" content="index, follow">
+    <link rel="apple-touch-icon" href="https://adamdh7ai.pages.dev/asset/512.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        :root {
+            --bg: #000000;
+            --panel: #000000;
+            --ai-bubble: #262626;
+            --ai-text: #d0d0d0;
+            --user-blue: #0b3d91;
+            --user-text: #e8f4ff;
+            --muted: #7d7d7d;
+            --header-h: 60px;
+            --msg-gap: 14px;
+            --max-msg-w: 78%;
+            --wa-code-bg: rgba(255,255,255,0.03);
+            --wa-inline-bg: rgba(255,255,255,0.06);
+            --input-bg: #1c1c1e;
+            --border: rgba(255,255,255,0.08);
+            --safe-bottom: env(safe-area-inset-bottom);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body { height: 100%; margin: 0; overflow: hidden; }
+        body {
+            background: var(--bg);
+            color: var(--ai-text);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            touch-action: pan-y;
+        }
+
+        .modern-input {
+            background: #1c1c1e;
+            border: none;
+            border-radius: 14px;
+            padding: 18px;
+            color: white;
+            width: 100%;
+            outline: none;
+            font-size: 16px;
+        }
+
+        #scr-chat {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+        #scr-chat.visible { display: flex; }
+
+        header {
+            height: var(--header-h);
+            background: var(--panel);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+        }
+        #menuBtn svg { width: 28px; height: 28px; stroke: white; stroke-width: 2; }
+        .title { font-weight: 800; font-size: 19px; color: white; letter-spacing: -0.5px; cursor: pointer; }
+
+        .chat-box {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 16px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: var(--msg-gap);
+            -webkit-overflow-scrolling: touch;
+        }
+        .chat-box::-webkit-scrollbar { display: none; }
+
+        .message { 
+            max-width: var(--max-msg-w); 
+            align-self: flex-start; 
+            opacity: 0; 
+            animation: fadeIn .35s forwards; 
+            word-break: break-word;
+            white-space: pre-wrap;
+        }
+        .message.user { align-self: flex-end; }
+        .bubble {
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 15.8px;
+            line-height: 1.42;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.4);
+        }
+        .bubble.user { background: var(--user-blue); color: var(--user-text); }
+        .bubble.bot { background: var(--ai-bubble); color: var(--ai-text); border: 1px solid var(--border); }
+
+        .meta { font-size: 11px; color: var(--muted); margin-top: 6px; text-align: right; }
+
+        .message-media {
+            margin-top: 12px;
+            border-radius: 14px;
+            overflow: hidden;
+            position: relative;
+            max-width: 320px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+        }
+        .message-media img, .message-media video, .message-media audio {
+            width: 100%;
+            display: block;
+            border-radius: 14px;
+        }
+        .message-media audio { background: #111; padding: 8px; }
+
+        @media (max-width: 920px) {
+            .message-media { max-width: 90vw; }
+            .message { max-width: 90%; }
+        }
+        @media (max-width: 520px) {
+            :root { --max-msg-w: 86%; }
+            .title { font-size: 16px; }
+        }
+
+        .wa-paragraph { margin: 7px 0; }
+        .wa-strong { font-weight: 700; display: inline; }
+        .wa-underline { text-decoration: underline; display: inline; }
+        .wa-inline {
+            background: var(--wa-inline-bg);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-family: ui-monospace, Menlo, monospace;
+            font-size: 14px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        .wa-code-block {
+            display: block;
+            background: var(--wa-code-bg);
+            padding: 14px;
+            border-radius: 12px;
+            font-family: ui-monospace, Menlo, monospace;
+            font-size: 13.8px;
+            line-height: 1.5;
+            margin: 12px 0;
+            border: 1px solid var(--border);
+            white-space: pre-wrap;
+            -webkit-user-select: text;
+            user-select: text;
+            cursor: pointer;
+        }
+
+        .copied-flash { position: relative; display: inline-block; }
+        .copied-flash::after {
+            content: '✔';
+            position: absolute;
+            right: -22px;
+            top: 0;
+            font-size: 14px;
+            opacity: 0;
+            transform: translateX(0);
+            transition: .25s;
+            color: #7CFC00;
+        }
+        .copied-flash.copied::after { opacity: 1; transform: translateX(6px); }
+
+        .bottom-zone {
+            padding: 12px 16px calc(20px + var(--safe-bottom));
+            background: var(--bg);
+            border-top: 1px solid rgba(255,255,255,0.04);
+        }
+        #errorMsg {
+            text-align: center;
+            padding: 12px;
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border-radius: 12px;
+            margin: 0 16px 12px;
+            opacity: 0;
+            transition: opacity 0.4s;
+            pointer-events: none;
+        }
+        #errorMsg.show { opacity: 1; }
+
+        .input-wrapper {
+            display: flex;
+            align-items: end;
+            gap: 12px;
+        }
+        textarea {
+            flex: 1;
+            min-height: 56px;
+            max-height: 180px;
+            padding: 16px;
+            border-radius: 14px;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            color: white;
+            font-size: 16px;
+            resize: none;
+            outline: none;
+            overflow-y: auto;
+        }
+        textarea::placeholder {
+            color: rgba(255,255,255,0.35);
+        }
+        .action-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(180deg, var(--user-blue), #06306a);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(11,61,145,0.3);
+            flex-shrink: 0;
+        }
+        .action-btn:disabled {
+            opacity: 0.4;
+            cursor: default;
+        }
+        .action-btn svg {
+            width: 26px;
+            height: 26px;
+            fill: white;
+        }
+
+        #previewContainer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding: 0 4px;
+        }
+        .preview-item {
+            position: relative;
+            max-width: 280px;
+        }
+        .preview-item img, .preview-item video, .preview-item audio {
+            width: 100%;
+            max-height: 280px;
+            object-fit: cover;
+            border-radius: 14px;
+            display: block;
+        }
+        .preview-item audio {
+            background: #111;
+            padding: 8px;
+        }
+        .preview-remove {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        #userMenu {
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            width: 280px;
+            background: #0f0f0f;
+            border-right: 1px solid rgba(255,255,255,0.08);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 100;
+            padding-top: var(--header-h);
+        }
+        #userMenu.show { transform: translateX(0); }
+
+        .backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 95;
+        }
+        .backdrop.show { opacity: 1; pointer-events: auto; }
+
+        #lang-sheet {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: #1c1c1e;
+            border-radius: 20px 20px 0 0;
+            padding: 20px 0;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+            z-index: 100;
+        }
+        #lang-sheet.show { transform: translateY(0); }
+
+        #modal {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 20px;
+        }
+        #modal.active { display: flex; }
+        #modalContent {
+            max-width: 94vw;
+            max-height: 94vh;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+        }
+        #modalContent img, #modalContent video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        #modalContent audio {
+            width: 100%;
+        }
+        .modal-controls {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            display: flex;
+            gap: 12px;
+            z-index: 110;
+        }
+        #closeModalBtn, #downloadBtn {
+            background: rgba(30,30,30,0.8);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+        #closeModalBtn { font-size: 28px; padding: 8px 12px; }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+    </style>
 </head>
 <body>
-  <div id="header">
-    <h1># D'H7</h1>
-    <h2>Digital HUB 7</h2>
-    <h3>Adam_D'H7</h3>
-    <div id="tfid-container">
-      <input type="text" id="tfid" placeholder="TFID:">
+
+    <section id="scr-auth" class="flex-1 flex flex-col items-center justify-center p-8">
+        <div class="w-full max-w-sm text-center">
+            <h1 class="text-7xl font-black tracking-tighter mb-2 italic cursor-pointer" onclick="showLang()">D'H7</h1>
+            <p class="text-zinc-600 text-xs uppercase tracking-[0.6em] mb-16" data-key="subtitle">Digital HUB 7</p>
+
+            <div id="login-form" class="space-y-4">
+                <input type="text" id="login-id" data-key="placeholder-tfid" placeholder="TFID oswa DH7" class="modern-input">
+                <input type="password" id="login-pass" data-key="placeholder-password" placeholder="Modpas" class="modern-input">
+                <button onclick="login()" class="w-full bg-white text-black font-black py-4 rounded-2xl mt-6 text-lg" data-key="connect">KONEKTE</button>
+                <button onclick="toggleAuth()" class="w-full text-zinc-500 text-sm mt-4" data-key="register">KREYE YON KONT</button>
+            </div>
+
+            <div id="reg-form" class="hidden space-y-4">
+                <div class="flex gap-3">
+                    <input type="text" id="reg-nom" data-key="placeholder-lastname" placeholder="Nom" class="modern-input">
+                    <input type="text" id="reg-prenom" data-key="placeholder-firstname" placeholder="Prenom" class="modern-input">
+                </div>
+                <input type="text" id="reg-dh7" data-key="placeholder-dh7" placeholder="DH7 ID (@dh7.tf)" class="modern-input">
+                <input type="number" id="reg-age" data-key="placeholder-age" placeholder="Laj" class="modern-input">
+                <input type="password" id="reg-pass" data-key="placeholder-password" placeholder="Modpas" class="modern-input">
+                <button onclick="register()" class="w-full bg-white text-black font-black py-4 rounded-2xl mt-6" data-key="create-account">JOIN D'H7</button>
+                <button onclick="toggleAuth()" class="w-full text-zinc-500 text-sm mt-4" data-key="back-to-login">RETOUNEN</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="scr-chat">
+        <header>
+            <button id="menuBtn" aria-label="Menu">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <div class="title" onclick="showLang()">Adam_D'H7</div>
+            <div style="width:48px"></div>
+        </header>
+
+        <main id="chatBox" class="chat-box" aria-live="polite"></main>
+
+        <div class="bottom-zone">
+            <div id="errorMsg"></div>
+            <div id="previewContainer"></div>
+            <form id="chatForm" autocomplete="off" novalidate>
+                <div class="input-wrapper">
+                    <button id="attachBtn" type="button" class="action-btn">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="white"/>
+                        </svg>
+                    </button>
+                    <textarea id="userInput" aria-label="Mesaj" placeholder="Ekris mesaj ou..."></textarea>
+                    <button id="actionBtn" class="action-btn" type="button" disabled>
+                        <svg id="sendIcon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z" fill="white"/>
+                        </svg>
+                        <svg id="voiceIcon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="display:none;">
+                            <path d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.47,17.5 13,17.96V21H11V17.96C7.53,17.5 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z" fill="white"/>
+                        </svg>
+                        <svg id="stopIcon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="display:none;">
+                            <rect x="6" y="6" width="12" height="12" fill="white"/>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+            <input type="file" id="fileInput" accept="image/*,video/*,audio/*" style="display:none;">
+        </div>
+    </section>
+
+    <div id="userMenu">
+        <div class="p-6 pt-8">
+            <div id="user-name" class="text-2xl font-black text-white mb-6"></div>
+            <div class="space-y-3 text-sm text-zinc-400">
+                <p>TFID: <span id="user-tfid" class="font-mono text-white"></span></p>
+                <div id="user-dh7-line" class="hidden">
+                    <p>DH7: <span id="user-dh7" class="font-mono text-white"></span></p>
+                </div>
+            </div>
+            <button onclick="logout()" class="mt-12 w-full bg-red-900/80 text-white py-4 rounded-2xl font-bold text-lg" data-key="logout-btn">DEKONEKTE</button>
+        </div>
     </div>
-    <div id="lang-buttons">
-      <button class="lang-btn active" data-lang="ht">Kreyòl Ayisyen</button>
-      <button class="lang-btn" data-lang="fr">Français</button>
-      <button class="lang-btn" data-lang="en">English</button>
-      <button class="lang-btn" data-lang="es">Español</button>
+    <div id="menuBackdrop" class="backdrop" onclick="closeMenu()"></div>
+
+    <div id="backdrop" class="backdrop" onclick="closeOverlays()"></div>
+    <div id="lang-sheet">
+        <div class="px-6 py-4 text-center text-white text-lg cursor-pointer" onclick="changeLanguage('ht')">Kreyòl Ayisyen</div>
+        <div class="px-6 py-4 text-center text-white text-lg cursor-pointer" onclick="changeLanguage('fr')">Français</div>
+        <div class="px-6 py-4 text-center text-white text-lg cursor-pointer" onclick="changeLanguage('en')">English</div>
+        <div class="px-6 py-4 text-center text-white text-lg cursor-pointer" onclick="changeLanguage('es')">Español</div>
+        <div class="px-6 py-4 text-center text-blue-500 font-bold text-lg cursor-pointer" onclick="closeOverlays()">Fèmen</div>
     </div>
-    <button id="close-btn">Fèmen</button>
-  </div>
 
-  <div id="chat-container"></div>
-
-  <div id="input-area">
-    <textarea id="message-input" placeholder="Ekri mesaj ou..."></textarea>
-    <div id="controls">
-      <label id="attach-image">📷</label>
-      <input type="file" id="image-input" accept="image/*">
-      <button id="record-btn">🎤</button>
-      <button id="send-btn">Voye</button>
+    <div id="modal">
+        <div class="modal-controls">
+            <button id="downloadBtn">Télécharge</button>
+            <button id="closeModalBtn">✖</button>
+        </div>
+        <div id="modalContent"></div>
     </div>
-  </div>
 
-  <script>
-    // === Configuration ===
-    const WORKER_URL = "server.ai.adamdh7.org"; // Mete URL Worker ou la (ex: "https://ai.adamdh7.org")
+    <script>
+        const API_AUTH = "https://server.dh7.adamdh7.org";
+        const API_WORKER = "https://server.ai.adamdh7.org/";
+        const SESSION_KEY = 'dh7_session';
 
-    // === Elements ===
-    const chatContainer = document.getElementById('chat-container');
-    const messageInput = document.getElementById('message-input');
-    const sendBtn = document.getElementById('send-btn');
-    const recordBtn = document.getElementById('record-btn');
-    const imageInput = document.getElementById('image-input');
-    const attachImageLabel = document.getElementById('attach-image');
-    const tfidInput = document.getElementById('tfid');
-    const closeBtn = document.getElementById('close-btn');
+        let currentUser = null;
+        let currentTfid = null;
+        let currentLanguage = localStorage.getItem('language') || 'ht';
 
-    // === State ===
-    let tfid = localStorage.getItem('currentTfid') || crypto.randomUUID().slice(0, 12);
-    tfidInput.value = tfid;
-    localStorage.setItem('currentTfid', tfid);
-
-    let mediaRecorder = null;
-    let audioChunks = [];
-    let selectedImageFile = null;
-
-    // === Functions ===
-    function scrollToBottom() {
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
-
-    function createMessageElement(msg) {
-      const div = document.createElement('div');
-      div.classList.add('message', msg.from);
-
-      if (msg.type === 'text' && msg.text) {
-        div.textContent = msg.text;
-      } else if (msg.type === 'image' && msg.url) {
-        const img = document.createElement('img');
-        img.src = msg.url;
-        img.alt = "Image";
-        div.appendChild(img);
-      } else if (msg.type === 'audio' && msg.audio) {
-        const audio = document.createElement('audio');
-        audio.controls = true;
-        audio.src = `data:audio/mpeg;base64,${msg.audio}`;
-        div.appendChild(audio);
-        audio.play(); // Auto-play bot voice responses
-      }
-
-      return div;
-    }
-
-    async function loadHistory() {
-      if (!tfid) return;
-      try {
-        const res = await fetch(`${WORKER_URL}?tfid=${tfid}`);
-        if (!res.ok) return;
-        const data = await res.json();
-        if (data.ok && data.session && data.session.messages) {
-          chatContainer.innerHTML = '';
-          data.session.messages.forEach(msg => {
-            chatContainer.appendChild(createMessageElement(msg));
-          });
-          scrollToBottom();
-        }
-      } catch (e) {
-        console.error("Error loading history:", e);
-      }
-    }
-
-    async function sendMessage() {
-      if (!tfid) {
-        alert("Antre yon TFID valab");
-        return;
-      }
-
-      const text = messageInput.value.trim();
-      let imageBase64 = null;
-      let audioBase64 = null;
-
-      if (selectedImageFile) {
-        imageBase64 = await fileToDataURL(selectedImageFile);
-      }
-
-      const body = {
-        tfid,
-        text: text || undefined
-      };
-
-      if (imageBase64) body.image = imageBase64;
-      if (audioBase64) body.audio = audioBase64;
-
-      // Append user messages immediately
-      if (text) {
-        chatContainer.appendChild(createMessageElement({ from: 'user', type: 'text', text }));
-      }
-      if (imageBase64) {
-        chatContainer.appendChild(createMessageElement({ from: 'user', type: 'image', url: imageBase64 }));
-      }
-      if (audioBase64) {
-        const tempAudio = document.createElement('audio');
-        tempAudio.controls = true;
-        tempAudio.src = `data:audio/webm;base64,${audioBase64}`;
-        const userAudioMsg = createMessageElement({ from: 'user', type: 'audio', audio: audioBase64 });
-        chatContainer.appendChild(userAudioMsg);
-      }
-
-      messageInput.value = '';
-      selectedImageFile = null;
-      audioChunks = [];
-      recordBtn.textContent = '🎤';
-      scrollToBottom();
-
-      const res = await fetch(WORKER_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      });
-
-      if (res.headers.get('Content-Type')?.includes('text/plain')) {
-        // Streaming response (reasoning route)
-        const botDiv = document.createElement('div');
-        botDiv.classList.add('message', 'bot');
-        chatContainer.appendChild(botDiv);
-        const reader = res.body.getReader();
-        const decoder = new TextDecoder();
-        let buffer = '';
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          buffer += decoder.decode(value, { stream: true });
-          botDiv.textContent = buffer;
-          scrollToBottom();
-        }
-      } else {
-        const data = await res.json();
-        if (data.type === 'image' && data.url) {
-          chatContainer.appendChild(createMessageElement({ from: 'bot', type: 'image', url: data.url }));
-        } else {
-          chatContainer.appendChild(createMessageElement({ from: 'bot', type: 'text', text: data.response }));
-          if (data.audio) {
-            chatContainer.appendChild(createMessageElement({ from: 'bot', type: 'audio', audio: data.audio }));
-          }
-        }
-        scrollToBottom();
-      }
-    }
-
-    function fileToDataURL(file) {
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.readAsDataURL(file);
-      });
-    }
-
-    async function startRecording() {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder = new MediaRecorder(stream);
-        audioChunks = [];
-
-        mediaRecorder.ondataavailable = e => {
-          audioChunks.push(e.data);
+        const translations = {
+            ht: { 
+                subtitle: "Digital HUB 7", 
+                "placeholder-tfid": "TFID oswa DH7", 
+                "placeholder-password": "Modpas", 
+                connect: "KONEKTE", 
+                register: "KREYE YON KONT", 
+                "placeholder-lastname": "Nom", 
+                "placeholder-firstname": "Prenom", 
+                "placeholder-dh7": "DH7 ID (@dh7.tf)", 
+                "placeholder-age": "Laj", 
+                "create-account": "JOIN D'H7", 
+                "back-to-login": "RETOUNEN", 
+                "logout-btn": "DEKONEKTE", 
+                chat_placeholder: "Ekris mesaj ou...",
+                exceed_msg: "Ou depase limit 2000 karaktè (espas pa konte)"
+            },
+            fr: { 
+                subtitle: "Digital HUB 7", 
+                "placeholder-tfid": "TFID ou DH7", 
+                "placeholder-password": "Mot de passe", 
+                connect: "SE CONNECTER", 
+                register: "CRÉER UN COMPTE", 
+                "placeholder-lastname": "Nom", 
+                "placeholder-firstname": "Prénom", 
+                "placeholder-dh7": "DH7 ID (@dh7.tf)", 
+                "placeholder-age": "Âge", 
+                "create-account": "REJOINDRE D'H7", 
+                "back-to-login": "RETOUR", 
+                "logout-btn": "DÉCONNEXION", 
+                chat_placeholder: "Tapez votre message...",
+                exceed_msg: "Vous avez dépassé la limite de 2000 caractères (espaces non comptés)"
+            },
+            en: { 
+                subtitle: "Digital HUB 7", 
+                "placeholder-tfid": "TFID or DH7", 
+                "placeholder-password": "Password", 
+                connect: "LOGIN", 
+                register: "CREATE ACCOUNT", 
+                "placeholder-lastname": "Last Name", 
+                "placeholder-firstname": "First Name", 
+                "placeholder-dh7": "DH7 ID (@dh7.tf)", 
+                "placeholder-age": "Age", 
+                "create-account": "JOIN D'H7", 
+                "back-to-login": "BACK", 
+                "logout-btn": "LOGOUT", 
+                chat_placeholder: "Type your message...",
+                exceed_msg: "You exceeded the 2000 character limit (spaces not counted)"
+            },
+            es: { 
+                subtitle: "Digital HUB 7", 
+                "placeholder-tfid": "TFID o DH7", 
+                "placeholder-password": "Contraseña", 
+                connect: "CONECTAR", 
+                register: "CREAR CUENTA", 
+                "placeholder-lastname": "Apellido", 
+                "placeholder-firstname": "Nombre", 
+                "placeholder-dh7": "DH7 ID (@dh7.tf)", 
+                "placeholder-age": "Edad", 
+                "create-account": "UNIRSE A D'H7", 
+                "back-to-login": "REGRESAR", 
+                "logout-btn": "CERRAR SESIÓN", 
+                chat_placeholder: "Escribe tu mensaje...",
+                exceed_msg: "Has excedido el límite de 2000 caracteres (espacios no cuentan)"
+            }
         };
 
-        mediaRecorder.onstop = async () => {
-          const blob = new Blob(audioChunks, { type: 'audio/webm' });
-          const reader = new FileReader();
-          reader.onload = () => {
-            const base64 = reader.result.split(',')[1];
-            // We don't send immediately, wait for send button
-          };
-          reader.readAsDataURL(blob);
+        const sendSVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M2,21L23,12L2,3V10L17,12L2,14V21Z" fill="white"/></svg>`;
+        const voiceSVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.47,17.5 13,17.96V21H11V17.96C7.53,17.5 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z" fill="white"/></svg>`;
+        const stopSVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="12" height="12" fill="white"/></svg>`;
+
+        let currentMedia = null;
+        let recorder = null;
+        let audioChunks = [];
+        let recording = false;
+        let messageCount = 0;
+        let isWaiting = false;
+
+        async function login() {
+            let id = document.getElementById('login-id').value.trim();
+            const pass = document.getElementById('login-pass').value;
+            if (!id || !pass) return alert("Ranpli tout chan yo");
+            if (!id.includes('@dh7.tf') && !id.startsWith('TF-')) id += '@dh7.tf';
+
+            try {
+                const res = await fetch(`${API_AUTH}/login`, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ identifier: id, password: pass }) 
+                });
+                const data = await res.json();
+                if (data.success) {
+                    currentUser = data.user;
+                    currentTfid = data.user.tfid;
+                    localStorage.setItem(SESSION_KEY, JSON.stringify(currentUser));
+                    showChat();
+                } else {
+                    alert(data.error || "Erreur connexion");
+                }
+            } catch (e) {
+                alert("Pa ka kontakte sèvè a");
+            }
+        }
+
+        async function register() {
+            const nom = document.getElementById('reg-nom').value.trim();
+            const prenom = document.getElementById('reg-prenom').value.trim();
+            let dh7 = document.getElementById('reg-dh7').value.trim();
+            const age = parseInt(document.getElementById('reg-age').value);
+            const pass = document.getElementById('reg-pass').value;
+
+            if (!nom || !prenom || !dh7 || isNaN(age) || !pass) return alert("Tout chan obligatwa");
+            if (!dh7.includes('@dh7.tf')) dh7 += '@dh7.tf';
+
+            try {
+                const res = await fetch(`${API_AUTH}/register`, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ nom, prenom, dh7, age, password: pass }) 
+                });
+                const result = await res.json();
+                if (result.success) {
+                    alert(`Kont kreye! TFID ou: ${result.tfid}`);
+                    toggleAuth();
+                } else {
+                    alert(result.error || "Erreur");
+                }
+            } catch (e) {
+                alert("Erreur sèvè");
+            }
+        }
+
+        function toggleAuth() {
+            document.getElementById('login-form').classList.toggle('hidden');
+            document.getElementById('reg-form').classList.toggle('hidden');
+        }
+
+        function logout() {
+            localStorage.removeItem(SESSION_KEY);
+            location.reload();
+        }
+
+        function showChat() {
+            document.getElementById('scr-auth').classList.add('hidden');
+            document.getElementById('scr-chat').classList.add('visible');
+
+            const name = `${currentUser.prenom || ''} ${currentUser.nom || ''}`.trim();
+            document.getElementById('user-name').textContent = name || 'Itilizatè';
+            document.getElementById('user-tfid').textContent = currentUser.tfid || '';
+            if (currentUser.dh7) {
+                document.getElementById('user-dh7').textContent = currentUser.dh7;
+                document.getElementById('user-dh7-line').classList.remove('hidden');
+            }
+
+            changeLanguage(currentLanguage);
+            initChat();
+        }
+
+        async function initChat() {
+            chatBox.innerHTML = '';
+            messageCount = 0;
+            await loadOrUpdateSession();
+        }
+
+        const chatBox = document.getElementById('chatBox');
+        const userInput = document.getElementById('userInput');
+        const actionBtn = document.getElementById('actionBtn');
+        const attachBtn = document.getElementById('attachBtn');
+        const fileInput = document.getElementById('fileInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const modal = document.getElementById('modal');
+        const modalContent = document.getElementById('modalContent');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        function updateActionIcon() {
+            const hasText = userInput.value.trim().length > 0;
+            const hasMedia = currentMedia !== null;
+            if (recording) {
+                actionBtn.innerHTML = stopSVG;
+            } else if (!hasText && !hasMedia) {
+                actionBtn.innerHTML = voiceSVG;
+            } else {
+                actionBtn.innerHTML = sendSVG;
+            }
+            actionBtn.disabled = !(hasText || hasMedia || recording);
+        }
+
+        function clearPreview() {
+            previewContainer.innerHTML = '';
+            if (currentMedia && currentMedia.previewURL) {
+                URL.revokeObjectURL(currentMedia.previewURL);
+            }
+            currentMedia = null;
+        }
+
+        function addPreview(type, previewURL, dataURL) {
+            clearPreview();
+            const item = document.createElement('div');
+            item.className = 'preview-item';
+
+            const mediaEl = document.createElement(type === 'image' ? 'img' : type === 'video' ? 'video' : 'audio');
+            mediaEl.src = previewURL;
+            if (type !== 'image') {
+                mediaEl.controls = true;
+            }
+            item.appendChild(mediaEl);
+
+            const removeBtn = document.createElement('div');
+            removeBtn.className = 'preview-remove';
+            removeBtn.textContent = '✖';
+            removeBtn.onclick = (e) => {
+                e.stopPropagation();
+                clearPreview();
+                updateActionIcon();
+            };
+            item.appendChild(removeBtn);
+
+            mediaEl.onclick = () => openModal(previewURL, type);
+
+            previewContainer.appendChild(item);
+
+            currentMedia = { type: type === 'video' ? 'audio' : type, data: dataURL, previewURL };
+            updateActionIcon();
+        }
+
+        function startRecording() {
+            navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+                recorder = new MediaRecorder(stream);
+                audioChunks = [];
+                recorder.ondataavailable = e => audioChunks.push(e.data);
+                recorder.onstop = () => {
+                    const blob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const previewURL = URL.createObjectURL(blob);
+                    const reader = new FileReader();
+                    reader.onload = () => addPreview('audio', previewURL, reader.result);
+                    reader.readAsDataURL(blob);
+                    stream.getTracks().forEach(track => track.stop());
+                };
+                recorder.start();
+                recording = true;
+                updateActionIcon();
+            }).catch(() => alert('Mikwo pa aksesib'));
+        }
+
+        function stopRecording() {
+            if (recorder && recording) {
+                recorder.stop();
+                recording = false;
+                updateActionIcon();
+            }
+        }
+
+        attachBtn.onclick = () => fileInput.click();
+
+        fileInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const isImage = file.type.startsWith('image/');
+            const isVideo = file.type.startsWith('video/');
+            const isAudio = file.type.startsWith('audio/');
+            if (!isImage && !isVideo && !isAudio) {
+                alert('Fichye sa pa sipòte');
+                return;
+            }
+            const previewURL = URL.createObjectURL(file);
+            const reader = new FileReader();
+            reader.onload = () => {
+                const mtype = isImage ? 'image' : (isVideo ? 'video' : 'audio');
+                const sendType = isImage ? 'image' : 'audio';
+                addPreview(mtype, previewURL, reader.result);
+            };
+            reader.readAsDataURL(file);
         };
 
-        mediaRecorder.start();
-        recordBtn.classList.add('recording');
-        recordBtn.textContent = '⏹';
-      } catch (e) {
-        alert("Pa kapab aksè mikwofòn");
-      }
-    }
+        actionBtn.onclick = () => {
+            const hasText = userInput.value.trim().length > 0;
+            const hasMedia = currentMedia !== null;
+            if (recording) {
+                stopRecording();
+            } else if (!hasText && !hasMedia) {
+                startRecording();
+            } else {
+                sendMessage();
+            }
+        };
 
-    function stopRecording() {
-      if (mediaRecorder && mediaRecorder.state === 'recording') {
-        mediaRecorder.stop();
-        mediaRecorder.stream.getTracks().forEach(track => track.stop());
-        recordBtn.classList.remove('recording');
-        recordBtn.textContent = '🎤';
-      }
-    }
+        async function sendMessage() {
+            if (isWaiting) return;
+            const text = userInput.value.trim();
 
-    // === Event Listeners ===
-    tfidInput.addEventListener('change', () => {
-      tfid = tfidInput.value.trim();
-      if (tfid) {
-        localStorage.setItem('currentTfid', tfid);
-        loadHistory();
-      }
-    });
+            const charCount = text.replace(/\s/g, '').length;
+            if (text && charCount > 2000) {
+                showError(translations[currentLanguage].exceed_msg);
+                return;
+            }
 
-    sendBtn.addEventListener('click', sendMessage);
+            isWaiting = true;
+            actionBtn.disabled = true;
 
-    messageInput.addEventListener('keydown', e => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
-      }
-    });
+            if (text) {
+                renderMessage({who: 'user', text});
+            }
+            if (currentMedia) {
+                renderMessage({who: 'user', mediaType: currentMedia.type === 'audio' && currentMedia.previewURL.includes('video') ? 'video' : currentMedia.type, mediaSrc: currentMedia.previewURL});
+            }
 
-    attachImageLabel.addEventListener('click', () => imageInput.click());
+            userInput.value = '';
+            clearPreview();
+            updateActionIcon();
+            showTyping();
 
-    imageInput.addEventListener('change', e => {
-      if (e.target.files[0]) {
-        selectedImageFile = e.target.files[0];
-        attachImageLabel.textContent = '📷✓';
-      }
-    });
+            const body = { tfid: currentTfid };
+            if (text) body.text = text;
+            if (currentMedia) {
+                if (currentMedia.type === 'image') body.image = currentMedia.data;
+                else body.audio = currentMedia.data;
+            }
 
-    recordBtn.addEventListener('click', () => {
-      if (mediaRecorder && mediaRecorder.state === 'recording') {
-        stopRecording();
-      } else {
-        startRecording();
-      }
-    });
+            try {
+                const res = await fetch(API_WORKER, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
 
-    closeBtn.addEventListener('click', () => {
-      if (confirm("Vle efase konvèsasyon sa?")) {
-        fetch(WORKER_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ tfid, text: "/clear" })
-        }).then(() => {
-          chatContainer.innerHTML = '';
+                hideTyping();
+
+                if (res.headers.get('Content-Type')?.includes('text/plain')) {
+                    const botMsg = renderMessage({who: 'bot', text: ''});
+                    const bubble = botMsg.querySelector('.bubble');
+                    const reader = res.body.getReader();
+                    const decoder = new TextDecoder();
+                    let buffer = '';
+                    while (true) {
+                        const {done, value} = await reader.read();
+                        if (done) break;
+                        buffer += decoder.decode(value, {stream: true});
+                        bubble.textContent = buffer;
+                        chatBox.scrollTop = chatBox.scrollHeight;
+                    }
+                } else {
+                    await loadOrUpdateSession();
+                }
+            } catch (e) {
+                hideTyping();
+                showError('Erreur envoi');
+            } finally {
+                isWaiting = false;
+                updateActionIcon();
+            }
+        }
+
+        function renderMessage({who='bot', text=null, mediaType=null, mediaSrc=null, audioBase64=null, images=null, ts=Date.now()}) {
+            const msg = document.createElement('div');
+            msg.className = `message ${who}`;
+
+            if (text) {
+                const bubble = document.createElement('div');
+                bubble.className = `bubble ${who}`;
+                if (who === 'bot') {
+                    bubble.appendChild(formatToFragment(text));
+                } else {
+                    bubble.textContent = text;
+                }
+                msg.appendChild(bubble);
+            }
+
+            if (mediaType || audioBase64 || images) {
+                const mediaDiv = document.createElement('div');
+                mediaDiv.className = 'message-media';
+
+                if (audioBase64) {
+                    const audio = document.createElement('audio');
+                    audio.controls = true;
+                    audio.src = `data:audio/mpeg;base64,${audioBase64}`;
+                    if (who === 'bot') audio.autoplay = true;
+                    mediaDiv.appendChild(audio);
+                } else if (mediaType) {
+                    const el = document.createElement(mediaType === 'image' ? 'img' : mediaType === 'video' ? 'video' : 'audio');
+                    el.src = mediaSrc;
+                    if (mediaType !== 'image') el.controls = true;
+                    el.onclick = () => openModal(mediaSrc, mediaType);
+                    mediaDiv.appendChild(el);
+                } else if (images) {
+                    images.forEach(src => {
+                        const img = document.createElement('img');
+                        img.src = src;
+                        img.onclick = () => openModal(src, 'image');
+                        mediaDiv.appendChild(img);
+                    });
+                }
+                msg.appendChild(mediaDiv);
+            }
+
+            const meta = document.createElement('div');
+            meta.className = 'meta';
+            meta.textContent = new Date(ts).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+            msg.appendChild(meta);
+
+            chatBox.appendChild(msg);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            return msg;
+        }
+
+        function openModal(src, type) {
+            modalContent.innerHTML = '';
+            const el = document.createElement(type === 'image' ? 'img' : type === 'video' ? 'video' : 'audio');
+            el.src = src;
+            if (type !== 'image') {
+                el.controls = true;
+                el.autoplay = true;
+            }
+            modalContent.appendChild(el);
+            downloadBtn.style.display = type === 'image' ? 'block' : 'none';
+            downloadBtn.onclick = () => {
+                const a = document.createElement('a');
+                a.href = src;
+                a.download = type === 'image' ? 'image.png' : 'media';
+                a.click();
+            };
+            modal.classList.add('active');
+        }
+
+        closeModalBtn.onclick = () => modal.classList.remove('active');
+        modal.onclick = (e) => e.target === modal && modal.classList.remove('active');
+
+        async function fetchSession() {
+            if (!currentTfid) return null;
+            try {
+                const res = await fetch(`${API_WORKER}?tfid=${currentTfid}`);
+                if (!res.ok) return null;
+                const j = await res.json();
+                if (j.ok && j.session?.messages) return j.session.messages;
+            } catch {}
+            return null;
+        }
+
+        async function loadOrUpdateSession() {
+            const messages = await fetchSession();
+            if (!messages || messages.length === 0) return;
+
+            const newMsgs = messages.slice(messageCount);
+            if (newMsgs.length === 0) return;
+
+            hideTyping();
+
+            newMsgs.forEach(m => {
+                const who = m.from === 'user' ? 'user' : 'bot';
+                const images = m.url ? (Array.isArray(m.url) ? m.url : [m.url]) : null;
+                renderMessage({
+                    who,
+                    text: m.text,
+                    mediaType: m.type === 'image' ? 'image' : m.type === 'audio' ? 'audio' : null,
+                    mediaSrc: m.type === 'image' ? m.url : null,
+                    audioBase64: m.audio,
+                    images,
+                    ts: m.ts
+                });
+            });
+
+            messageCount = messages.length;
+        }
+
+        function showTyping() {
+            // simple dots if needed
+        }
+
+        function hideTyping() {}
+
+        function showError(msg) {
+            const el = document.getElementById('errorMsg');
+            el.textContent = msg;
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 4000);
+        }
+
+        userInput.addEventListener('input', () => {
+            userInput.style.height = 'auto';
+            userInput.style.height = Math.min(userInput.scrollHeight, 180) + 'px';
+            updateActionIcon();
         });
-      }
-    });
 
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        // Language change is UI only – AI is multilingual
-      });
-    });
+        userInput.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (userInput.value.trim() || currentMedia) sendMessage();
+            }
+        });
 
-    // Load history on start
-    loadHistory();
-  </script>
+        (function init() {
+            currentUser = JSON.parse(localStorage.getItem(SESSION_KEY));
+            if (currentUser && currentUser.tfid) {
+                currentTfid = currentUser.tfid;
+                showChat();
+            } else {
+                changeLanguage(currentLanguage);
+            }
+            updateActionIcon();
+        })();
+    </script>
 </body>
 </html>
