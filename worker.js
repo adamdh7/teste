@@ -1,30 +1,30 @@
 export default {
   async fetch(request, env) {
-    // Jere CORS (Preflight request)
     const corsHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type",
     };
 
-    if (request.method === "OPTIONS") {
-      return new Response(null, { headers: corsHeaders });
-    }
+    if (request.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
     const url = new URL(request.url);
 
     try {
-      // 1. ANALIZ IMAJ
-      if (url.pathname === "/analize-imaj" && request.method === "POST") {
-        const blob = await request.blob();
-        const arrayBuffer = await blob.arrayBuffer();
-        
-        const input = {
-          image: [...new Uint8Array(arrayBuffer)],
-          prompt: "Describe this image in English and Kreyòl",
-          max_tokens: 512
-        };
+      // Tcheke si AI binding nan egziste
+      if (!env.AI) {
+        throw new Error("AI binding pa jwenn. Verifye wrangler.toml ou.");
+      }
 
+      const blob = await request.blob();
+      const arrayBuffer = await blob.arrayBuffer();
+
+      // 1. ANALIZ IMAJ
+      if (url.pathname === "/analize-imaj") {
+        const input = {
+          image: new Uint8Array(arrayBuffer), // Pa itilize [...] spreads pou gwo fichye
+          prompt: "Describe this image",
+        };
         const response = await env.AI.run("@cf/llava-v1.5-7b-it", input);
         return new Response(JSON.stringify(response), { 
           headers: { ...corsHeaders, "Content-Type": "application/json" } 
@@ -32,21 +32,17 @@ export default {
       }
 
       // 2. AUDIO TO TEXT
-      if (url.pathname === "/audio-to-text" && request.method === "POST") {
-        const blob = await request.blob();
-        const arrayBuffer = await blob.arrayBuffer();
-        
-        const input = {
-          audio: [...new Uint8Array(arrayBuffer)]
-        };
-
-        const response = await env.AI.run("@cf/openai/whisper", input);
+      if (url.pathname === "/audio-to-text") {
+        const response = await env.AI.run("@cf/openai/whisper", {
+          audio: new Uint8Array(arrayBuffer)
+        });
         return new Response(JSON.stringify(response), { 
           headers: { ...corsHeaders, "Content-Type": "application/json" } 
         });
       }
 
     } catch (e) {
+      console.error(e); // Sa ap parèt nan 'wrangler tail' oswa dashboard la
       return new Response(JSON.stringify({ error: e.message }), { 
         status: 500, 
         headers: { ...corsHeaders, "Content-Type": "application/json" } 
