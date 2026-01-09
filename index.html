@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Dashboard - Final</title>
+    <title>Final</title>
     <style>
         body { font-family: -apple-system, sans-serif; max-width: 800px; margin: auto; padding: 20px; background: #f0f2f5; color: #333; }
         h1 { text-align: center; color: #f38020; }
@@ -42,8 +42,7 @@
         <input type="file" id="imgInput" accept="image/*">
         <button id="btnImg">Analyze Image</button>
         <pre id="resImg">Waiting for result...</pre>
-        <button class="speak" onclick="speakResult('resImg', 'en')">🔊 Read Aloud (English)</button>
-        <button class="speak" onclick="speakResult('resImg', 'fr')">🔊 Read Aloud (French - better for Creole)</button>
+        <button class="speak" onclick="speakResult('resImg')">🔊 Read Aloud (English)</button>
     </div>
 
     <div class="card">
@@ -59,16 +58,12 @@
         <input type="file" id="audioFile" accept="audio/*,video/*">
         <button id="uploadBtn" class="upload">Upload File</button>
         <pre id="resAudio">Waiting for result...</pre>
-        <button class="speak" onclick="speakResult('resAudio', 'fr')">🔊 Read Transcription</button>
+        <button class="speak" onclick="speakResult('resAudio')">🔊 Read Transcription (English)</button>
     </div>
 
     <div class="card">
-        <h3>🔊 Text to Speech</h3>
-        <textarea id="ttsText" placeholder="Write text to hear aloud..."></textarea>
-        <select id="ttsLang">
-            <option value="en">English</option>
-            <option value="fr" selected>French (recommended for Creole)</option>
-        </select>
+        <h3>🔊 Text to Speech (English only - reliable)</h3>
+        <textarea id="ttsText" placeholder="Write text to hear aloud (English pronunciation)..."></textarea>
         <button id="ttsBtn">Generate Audio</button>
         <audio id="ttsAudio" controls></audio>
     </div>
@@ -163,9 +158,8 @@
 
         document.getElementById('ttsBtn').onclick = () => {
             const text = document.getElementById('ttsText').value.trim();
-            const lang = document.getElementById('ttsLang').value;
             if (!text) return alert("Write text first!");
-            processTTS(text, lang);
+            processTTS(text);
         };
 
         async function processAudio(blobOrFile, resId) {
@@ -194,13 +188,13 @@
             }
         }
 
-        async function processTTS(text, lang) {
+        async function processTTS(text) {
             const audioPlayer = document.getElementById('ttsAudio');
             try {
                 const response = await fetch(`${BASE_URL}/text-to-speech`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text, lang })
+                    body: JSON.stringify({ text })
                 });
                 if (!response.ok) {
                     const errData = await response.json();
@@ -214,10 +208,10 @@
             }
         }
 
-        function speakResult(resId, lang) {
+        function speakResult(resId) {
             const text = document.getElementById(resId).innerText.trim();
             if (!text || text.includes("Waiting") || text.includes("Error")) return alert("No valid result to read!");
-            processTTS(text, lang);
+            processTTS(text);
         }
     </script>
 </body>
