@@ -1,87 +1,223 @@
 <!DOCTYPE html>
 <html lang="ht">
 <head>
-    <!-- ... (menm style ak head ansyen an) -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Dashboard Parfe - Adam_D'H7</title>
+    <style>
+        body { font-family: -apple-system, sans-serif; max-width: 800px; margin: auto; padding: 20px; background: #f0f2f5; color: #333; }
+        h1 { text-align: center; color: #f38020; }
+        .card { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .license-card { background: #fff3cd; border-left: 6px solid #f38020; }
+        h3 { margin-top: 0; color: #f38020; }
+        button { background: #f38020; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: bold; margin: 8px 4px; }
+        button:disabled { background: #aaa; cursor: not-allowed; }
+        button.stop { background: #d32f2f; }
+        button.upload { background: #1976d2; }
+        button.agree { background: #28a745; font-size: 1.1em; }
+        button.speak { background: #6c757d; }
+        pre { background: #1e1e1e; color: #0f0; padding: 16px; border-radius: 8px; overflow-x: auto; min-height: 80px; margin-top: 16px; white-space: pre-wrap; }
+        .record-controls { margin: 16px 0; }
+        #timer { font-size: 1.5em; font-weight: bold; color: #f38020; }
+        #recordStatus { margin: 8px 0; }
+        audio { margin-top: 10px; width: 100%; }
+        .or { text-align: center; margin: 20px 0; font-weight: bold; color: #666; }
+        #licenseStatus { margin: 16px 0; font-weight: bold; }
+        textarea { width: 100%; height: 100px; margin-bottom: 10px; }
+    </style>
 </head>
 <body>
 
-    <h1>🔥 AI Dashboard Final + TTS</h1>
+    <h1>🔥 AI Dashboard Parfe</h1>
 
-    <!-- ... (kenbe card license ak bouton agree si li toujou la) -->
+    <div class="card license-card">
+        <h3>⚠️ Pou Analize Imaj</h3>
+        <p>Premye fwa, aksepte license Meta a (yon sèl fwa pou tout tan).</p>
+        <button id="agreeBtn" class="agree">🟢 Aksepte License Meta</button>
+        <p id="licenseStatus">Estati: Pa aksepte ankò – klike bouton an.</p>
+    </div>
 
     <div class="card">
-        <h3>📷 Analize Imaj</h3>
+        <h3>📷 Analize Imaj (pi bon sou vizaj!)</h3>
         <input type="file" id="imgInput" accept="image/*">
         <button id="btnImg">Analize Imaj</button>
         <pre id="resImg">Atann rezilta...</pre>
-        <button onclick="speakResult('resImg', 'en')">🔊 Li Deskripsyon an awot vwa (Anglè)</button>
+        <button class="speak" onclick="speakResult('resImg', 'en')">🔊 Li an Angle</button>
+        <button class="speak" onclick="speakResult('resImg', 'fr')">🔊 Li an Fransè (pi bon pou Kreyòl)</button>
     </div>
 
     <div class="card">
-        <h3>🎙️ Transkri Vwa (Audio to Text)</h3>
-        <!-- ... (kenbe kontwòl enregistre ak upload) -->
+        <h3>🎙️ Transkri Vwa</h3>
+        <div class="record-controls">
+            <p id="recordStatus">Prepare pou enregistre...</p>
+            <p id="timer">00:00</p>
+            <button id="startBtn">🟢 Kòmanse</button>
+            <button id="stopBtn" class="stop" disabled>🔴 Sispann</button>
+            <audio id="previewAudio" controls style="display:none;"></audio>
+        </div>
+        <div class="or">—— OSWA ——</div>
+        <input type="file" id="audioFile" accept="audio/*,video/*">
+        <button id="uploadBtn" class="upload">Voye Fichye</button>
         <pre id="resAudio">Atann rezilta...</pre>
-        <button onclick="speakResult('resAudio', 'fr')">🔊 Li Transkripsyon an awot vwa (Fransè - pi bon pou Kreyòl)</button>
+        <button class="speak" onclick="speakResult('resAudio', 'fr')">🔊 Li Transkripsyon an</button>
     </div>
 
     <div class="card">
-        <h3>🔊 Tèks a Vwa (Text to Speech)</h3>
-        <textarea id="ttsText" rows="5" placeholder="Ecri tèks ou vle tande awot vwa (max 1000 karaktè)"></textarea>
+        <h3>🔊 Tèks a Vwa</h3>
+        <textarea id="ttsText" placeholder="Ekri tèks pou tande awot vwa..."></textarea>
         <select id="ttsLang">
             <option value="en">Anglè</option>
             <option value="fr" selected>Fransè (rekomande pou Kreyòl)</option>
         </select>
-        <button id="ttsBtn">Jenere epi Jwe Vwa</button>
-        <audio id="ttsAudio" controls style="width:100%; margin-top:10px;"></audio>
+        <button id="ttsBtn">Jenere Vwa</button>
+        <audio id="ttsAudio" controls></audio>
     </div>
 
     <script>
         const BASE_URL = "https://teste.adamdh7.org";
 
-        // ... (kenbe tout fonksyon ansyen yo: agree, enregistre, processAudio, processImage)
+        // Aksepte license
+        document.getElementById('agreeBtn').onclick = async () => {
+            const status = document.getElementById('licenseStatus');
+            const btn = document.getElementById('agreeBtn');
+            btn.disabled = true;
+            status.innerText = "Y ap voye...";
+            try {
+                const response = await fetch(`${BASE_URL}/agree-llama`, { method: 'POST' });
+                const data = await response.text();
+                status.innerText = "✅ Siksè! " + data;
+                status.style.color = "green";
+            } catch (err) {
+                status.innerText = "❌ Erè: " + err.message;
+                btn.disabled = false;
+            }
+        };
 
-        // NOUVO: Fonksyon pou Text to Speech
-        async function processTTS(text, lang = "en") {
+        // Enregistrman vwa
+        let mediaRecorder, audioChunks = [], timerInterval, seconds = 0, recordedBlob = null;
+
+        function formatTime(sec) {
+            const m = String(Math.floor(sec / 60)).padStart(2, '0');
+            const s = String(sec % 60).padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        function getSupportedMimeType() {
+            const types = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg', 'audio/wav'];
+            for (const type of types) if (MediaRecorder.isTypeSupported(type)) return type;
+            return '';
+        }
+
+        document.getElementById('startBtn').onclick = async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                audioChunks = [];
+                const mimeType = getSupportedMimeType();
+                mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType } : {});
+
+                mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                mediaRecorder.onstop = () => {
+                    const finalMime = mediaRecorder.mimeType || mimeType || 'audio/webm';
+                    recordedBlob = new Blob(audioChunks, { type: finalMime });
+                    document.getElementById('previewAudio').src = URL.createObjectURL(recordedBlob);
+                    document.getElementById('previewAudio').style.display = 'block';
+                    processAudio(recordedBlob, 'resAudio');
+                    stream.getTracks().forEach(track => track.stop());
+                };
+
+                mediaRecorder.start();
+                document.getElementById('startBtn').disabled = true;
+                document.getElementById('stopBtn').disabled = false;
+                document.getElementById('recordStatus').innerText = "Y ap enregistre... Pale byen klè!";
+
+                seconds = 0;
+                document.getElementById('timer').innerText = "00:00";
+                timerInterval = setInterval(() => {
+                    seconds++;
+                    document.getElementById('timer').innerText = formatTime(seconds);
+                }, 1000);
+            } catch (err) {
+                alert("Erè mikwofòn: " + err.message);
+            }
+        };
+
+        document.getElementById('stopBtn').onclick = () => {
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+                clearInterval(timerInterval);
+                document.getElementById('startBtn').disabled = false;
+                document.getElementById('stopBtn').disabled = true;
+                document.getElementById('recordStatus').innerText = "Fini – y ap trete...";
+            }
+        };
+
+        document.getElementById('uploadBtn').onclick = () => {
+            const file = document.getElementById('audioFile').files[0];
+            if (!file) return alert("Chwazi fichye anvan!");
+            processAudio(file, 'resAudio');
+        };
+
+        document.getElementById('btnImg').onclick = () => {
+            const file = document.getElementById('imgInput').files[0];
+            if (!file) return alert("Chwazi imaj anvan!");
+            processImage(file);
+        };
+
+        document.getElementById('ttsBtn').onclick = () => {
+            const text = document.getElementById('ttsText').value.trim();
+            const lang = document.getElementById('ttsLang').value;
+            if (!text) return alert("Ekri tèks anvan!");
+            processTTS(text, lang);
+        };
+
+        async function processAudio(blobOrFile, resId) {
+            const resBox = document.getElementById(resId);
+            resBox.innerText = "Y ap trete audio a...";
+            try {
+                const response = await fetch(`${BASE_URL}/audio-to-text`, { method: 'POST', body: blobOrFile });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || "Erè sèvè");
+                resBox.innerText = data.text || JSON.stringify(data, null, 2);
+            } catch (err) {
+                resBox.innerText = "Erè: " + err.message;
+            }
+        }
+
+        async function processImage(file) {
+            const resBox = document.getElementById('resImg');
+            resBox.innerText = "Y ap analize imaj la...";
+            try {
+                const response = await fetch(`${BASE_URL}/analize-imaj`, { method: 'POST', body: file });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || "Erè sèvè");
+                resBox.innerText = data.response || JSON.stringify(data, null, 2);
+            } catch (err) {
+                resBox.innerText = "Erè: " + err.message;
+            }
+        }
+
+        async function processTTS(text, lang) {
             const audioPlayer = document.getElementById('ttsAudio');
-            audioPlayer.src = ''; // Reset
-
             try {
                 const response = await fetch(`${BASE_URL}/text-to-speech`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ text, lang })
                 });
-
-                if (!response.ok) {
-                    const err = await response.json();
-                    throw new Error(err.error || 'Erè sèvè');
-                }
-
+                if (!response.ok) throw new Error("Erè sèvè");
                 const blob = await response.blob();
-                const url = URL.createObjectURL(blob);
-                audioPlayer.src = url;
+                audioPlayer.src = URL.createObjectURL(blob);
                 audioPlayer.play();
             } catch (err) {
-                alert("Erè TTS: " + err.message);
+                alert("Erè vwa: " + err.message);
             }
         }
 
-        // Bouton prensipal TTS
-        document.getElementById('ttsBtn').onclick = () => {
-            const text = document.getElementById('ttsText').value.trim();
-            const lang = document.getElementById('ttsLang').value;
-            if (!text) return alert("Ecri yon tèks anvan!");
-            processTTS(text, lang);
-        };
-
-        // Fonksyon pou li rezilta yo otomatikman
         function speakResult(resId, lang) {
             const text = document.getElementById(resId).innerText.trim();
-            if (!text || text.includes("Atann") || text.includes("Erè")) return alert("Pa gen bon rezilta pou li!");
+            if (!text || text.includes("Atann") || text.includes("Erè")) return alert("Pa gen rezilta pou li!");
             processTTS(text, lang);
         }
-
-        // ... (rès script ansyen an)
     </script>
 </body>
 </html>
