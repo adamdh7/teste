@@ -125,9 +125,9 @@ export default {
           });
         }
 
-        const normalizedLang = lang.toLowerCase() === "fr" ? "FR" : "EN";
+        const normalizedLang = lang.toLowerCase() === "fr" ? "fr" : "en";
 
-        const input = { text, lang: normalizedLang };
+        const input = { prompt: text, lang: normalizedLang };
 
         const response = await env.AI.run("@cf/myshell-ai/melotts", input);
 
