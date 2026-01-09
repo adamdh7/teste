@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ht">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Teste - Cloudflare</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; line-height: 1.6; }
+        .box { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 8px; }
+        button { background: #007bff; color: white; border: none; padding: 10px; cursor: pointer; border-radius: 5px; }
+        pre { background: #f4f4f4; padding: 10px; white-space: pre-wrap; word-wrap: break-word; }
+    </style>
+</head>
+<body>
+
+    <h2>Cloudflare AI Tester</h2>
+
+    <div class="box">
+        <h3>1. Analize Imaj (Llava)</h3>
+        <input type="file" id="imgInput" accept="image/*">
+        <button onclick="uploadFile('/analize-imaj', 'imgInput', 'imgRes')">Analize</button>
+        <pre id="imgRes"></pre>
+    </div>
+
+    <div class="box">
+        <h3>2. Audio to Text (Whisper)</h3>
+        <input type="file" id="audioInput" accept="audio/*">
+        <button onclick="uploadFile('/audio-to-text', 'audioInput', 'audioRes')">Transkri</button>
+        <pre id="audioRes"></pre>
+    </div>
+
+    <script>
+        async function uploadFile(endpoint, inputId, resId) {
+            const fileInput = document.getElementById(inputId);
+            const resDiv = document.getElementById(resId);
+            
+            if (!fileInput.files[0]) return alert("Chwazi yon fichye dabò!");
+            
+            resDiv.innerText = "Y ap travay sou li... tanpri tann.";
+            
+            try {
+                const response = await fetch(`https://teste.adamdh7.org${endpoint}`, {
+                    method: 'POST',
+                    body: fileInput.files[0]
+                });
+                const data = await response.json();
+                resDiv.innerText = JSON.stringify(data, null, 2);
+            } catch (err) {
+                resDiv.innerText = "Erè: " + err.message;
+            }
+        }
+    </script>
+</body>
+</html>
