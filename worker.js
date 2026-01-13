@@ -1,4 +1,4 @@
-exportexportexport default {
+exportexportexportexport default {
   async fetch(request, env) {
     const corsHeaders = {
       "Access-Control-Allow-Origin": "https://ai.adamdh7.org",
@@ -104,49 +104,12 @@ exportexportexport default {
           });
         }
 
-        const langDetectionInput = {
-          messages: [
-            {
-              role: "system",
-              content: "You are a precise language detection algorithm. Detect the language of the provided text and output ONLY the lowercase 2-letter ISO code, nothing else, no explanation, no punctuation, no quotes. Supported codes: 'en' for English, 'es' for Spanish/Español, 'fr' for French/Français, 'ht' for Haitian Creole/Kreyòl Ayisyen. If mixed or unclear, choose the dominant language."
-            },
-            {
-              role: "user",
-              content: text
-            }
-          ]
-        };
-
-        let detectedLang = "en";
-        
-        try {
-          const langResponse = await env.AI.run("@cf/meta/llama-3.1-8b-instruct", langDetectionInput);
-          
-          if (langResponse && langResponse.response) {
-            const cleaned = langResponse.response.trim().toLowerCase();
-            if (['en', 'es', 'fr', 'ht'].includes(cleaned)) {
-              detectedLang = cleaned;
-            }
-          }
-        } catch (err) {
-          detectedLang = "en";
-        }
-
-        const langMap = {
-          en: "en",
-          es: "es",
-          fr: "fr",
-          ht: "fr"
-        };
-
-        const ttsLang = langMap[detectedLang] || "en";
-
         const input = { 
-          prompt: text,
-          lang: ttsLang
+          text: text,
+          voice: "aura-orion-en"
         };
 
-        const response = await env.AI.run("@cf/myshell-ai/melotts", input);
+        const response = await env.AI.run("@cf/deepgram/aura-2-en", input);
 
         const audioBase64 = response.audio;
 
