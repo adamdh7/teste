@@ -105,10 +105,11 @@ export default {
         }
 
         const input = { 
-          prompt: text
+          text: text,
+          voice: "aura-orion-en"  // Voix d'homme sérieuse et professionnelle
         };
 
-        const response = await env.AI.run("@cf/myshell-ai/melotts", input);
+        const response = await env.AI.run("@cf/deepgram/aura-2-en", input);
 
         const audioBase64 = response.audio;
 
