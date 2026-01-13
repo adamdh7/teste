@@ -1,10 +1,21 @@
 export default {
   async fetch(request, env) {
+    const allowedOrigins = new Set([
+      "https://ai.adamdh7.org",
+      "https://fondend.pages.dev"
+    ]);
+
+    const origin = request.headers.get("Origin") || "";
+    const isAllowed = allowedOrigins.has(origin);
+
     const corsHeaders = {
-      "Access-Control-Allow-Origin": "https://ai.adamdh7.org",
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type",
     };
+
+    if (isAllowed) {
+      corsHeaders["Access-Control-Allow-Origin"] = origin;
+    }
 
     if (request.method === "OPTIONS") {
       return new Response(null, { headers: corsHeaders });
