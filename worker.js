@@ -106,24 +106,12 @@ export default {
 
         const input = { 
           text: text,
-          voice: "aura-orion-en"  // Voix d'homme sérieuse et professionnelle
+          speaker: "orion"  // Voix d'homme sérieuse, mature et professionnelle
         };
 
-        const response = await env.AI.run("@cf/deepgram/aura-2-en", input);
+        const audioStream = await env.AI.run("@cf/deepgram/aura-2-en", input);
 
-        const audioBase64 = response.audio;
-
-        if (!audioBase64 || typeof audioBase64 !== "string") {
-          throw new Error("Invalid audio response from model");
-        }
-
-        const binaryString = atob(audioBase64);
-        const bytes = new Uint8Array(binaryString.length);
-        for (let i = 0; i < binaryString.length; i++) {
-          bytes[i] = binaryString.charCodeAt(i);
-        }
-
-        return new Response(bytes, {
+        return new Response(audioStream, {
           headers: { ...corsHeaders, "Content-Type": "audio/mpeg" },
         });
       }
