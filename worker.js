@@ -16,8 +16,13 @@ function toBase64(buffer) {
 export default {
   async fetch(request, env) {
     const origin = request.headers.get("Origin");
-    const allowedOrigins = ["https://ai.adamdh7.org", "https://fondend.pages.dev"];
-    const isAllowed = allowedOrigins.includes(origin);
+    const allowedOrigins = [
+      "https://ai.adamdh7.org",
+      "https://fondend.pages.dev",
+      "http://127.0.0.1:5500"
+    ];
+    
+    const isAllowed = allowedOrigins.includes(origin) || !origin;
 
     const corsHeaders = {
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
@@ -35,7 +40,7 @@ export default {
     try {
       if (url.pathname === "/agree-llama") {
         await env.AI.run(MODELS.VISION, { prompt: "agree" });
-        return new Response("Vision Ready", {
+        return new Response("License accepted.", {
           headers: { ...corsHeaders, "Content-Type": "text/plain" },
         });
       }
@@ -45,7 +50,7 @@ export default {
         const buffer = await request.arrayBuffer();
 
         if (buffer.byteLength === 0 || buffer.byteLength > 10 * 1024 * 1024) {
-          return Response.json({ error: "File too large" }, { status: 400, headers: corsHeaders });
+          return Response.json({ error: "Image too large" }, { status: 400, headers: corsHeaders });
         }
 
         const base64 = toBase64(buffer);
@@ -56,7 +61,7 @@ export default {
               content: [
                 {
                   type: "text",
-                  text: "Analyze this image in extreme detail. Provide a rich, professional-level visual description in English only."
+                  text: "Analyze this image in extreme detail. If there are people or faces, describe them thoroughly: physical appearance, apparent age, gender, facial expression, emotions, clothing, pose, and if they resemble any known celebrity or person (give name if confident). Also describe the background, dominant colors, lighting, composition, photographic style, overall atmosphere, objects present, and any text. Provide a rich, professional-level visual description in English only."
                 },
                 {
                   type: "image_url",
@@ -64,7 +69,8 @@ export default {
                 }
               ]
             }
-          ]
+          ],
+          max_tokens: 1024
         });
 
         return Response.json({ response: response.response }, { headers: corsHeaders });
@@ -77,8 +83,9 @@ export default {
           return Response.json({ error: "Audio too large" }, { status: 400, headers: corsHeaders });
         }
 
+        const audioArray = Array.from(new Uint8Array(buffer));
         const response = await env.AI.run(MODELS.WHISPER, {
-          audio: Array.from(new Uint8Array(buffer))
+          audio: audioArray
         });
 
         return Response.json(response, { headers: corsHeaders });
@@ -102,10 +109,11 @@ export default {
       }
 
     } catch (e) {
-      const msg = e.message || "Error";
+      const msg = e.message || "Unknown error";
+      const status = msg.includes("5016") ? 403 : 500;
       return Response.json(
         { error: msg },
-        { status: msg.includes("5016") ? 403 : 500, headers: corsHeaders }
+        { status: status, headers: corsHeaders }
       );
     }
 
