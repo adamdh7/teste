@@ -73,33 +73,21 @@ export default {
         return Response.json({ response: response.response }, { headers: corsHeaders });
       }
 
-         if (url.pathname === "/audio-to-text" && request.method === "POST") {
-        const blob = await request.blob();
-        if (blob.size === 0 || blob.size > 30 * 1024 * 1024) {
-          return new Response(JSON.stringify({ error: "Audio empty or too large (max 30MB)" }), {
-            status: 400,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          });
+      if (url.pathname === "/audio-to-text" && request.method === "POST") {
+        const buffer = await request.arrayBuffer();
+
+        if (buffer.byteLength === 0 || buffer.byteLength > 30 * 1024 * 1024) {
+          return Response.json({ error: "Audio invalid or >30MB" }, { status: 400, headers: corsHeaders });
         }
 
-        const arrayBuffer = await blob.arrayBuffer();
-        const uint8Array = new Uint8Array(arrayBuffer);
-        
-        let binary = '';
-        for (let i = 0; i < uint8Array.byteLength; i++) {
-          binary += String.fromCharCode(uint8Array[i]);
-        }
-        const base64 = btoa(binary);
+        const base64 = toBase64(buffer);
 
-        const input = { audio: base64 };
-
-        const response = await env.AI.run("@cf/openai/whisper-large-v3-turbo", input);
-
-        return new Response(JSON.stringify(response), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        const response = await env.AI.run(MODELS.WHISPER, {
+          audio: base64
         });
-      }
 
+        return Response.json(response, { headers: corsHeaders });
+      }
 
       if (url.pathname === "/text-to-speech" && request.method === "POST") {
         const { text } = await request.json();
