@@ -61,7 +61,7 @@ export default {
               content: [
                 {
                   type: "text",
-                  text: "Analyze this image in extreme detail. If there are people or faces, describe them thoroughly: physical appearance, apparent age, gender, facial expression, emotions, clothing, pose, and if they resemble any known celebrity or person (give name if confident). Also describe the background, dominant colors, lighting, composition, photographic style, overall atmosphere, objects present, and any text. Provide a rich, professional-level visual description in English only."
+                  text: "Analyze this image in extreme detail. Describe people, appearance, emotions, clothing, background, colors, and atmosphere. Provide a professional description in English."
                 },
                 {
                   type: "image_url",
@@ -69,8 +69,7 @@ export default {
                 }
               ]
             }
-          ],
-          max_tokens: 1024
+          ]
         });
 
         return Response.json({ response: response.response }, { headers: corsHeaders });
@@ -83,9 +82,8 @@ export default {
           return Response.json({ error: "Audio too large" }, { status: 400, headers: corsHeaders });
         }
 
-        const audioArray = Array.from(new Uint8Array(buffer));
         const response = await env.AI.run(MODELS.WHISPER, {
-          audio: audioArray
+          audio: [...new Uint8Array(buffer)]
         });
 
         return Response.json(response, { headers: corsHeaders });
