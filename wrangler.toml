@@ -10,7 +10,7 @@ bucket_name = "teste"
 binding = "AI"
 
 [triggers]
-crons = ["*/7 * * * *"]
+crons = ["*/1 * * * *"]
 
 [[routes]]
 pattern = "teste.adamdh7.org/*"
