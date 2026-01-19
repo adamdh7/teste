@@ -8,6 +8,7 @@ bucket_name = "teste"
 
 [ai]
 binding = "AI"
+[triggers] crons = "*/7 * * * *"
 
 routes = [
   "teste.adamdh7.org/*"
